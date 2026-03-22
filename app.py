@@ -26,13 +26,22 @@ def fuzzy_match(word, keywords):
 # =====================
 
 PROMPT_KEYWORDS = {
+
     "leadership": [
         "lead", "led", "leadership", "managed", "organized",
-        "initiated", "founded", "president", "captain"
+        "initiated", "founded", "president", "captain",
+        "representative", "rep", "council", "role", "position",
+        "serve", "elected", "volunteer"
     ],
+    "community": [
+        "community", "team", "others", "collaborate",
+        "students", "school", "peers", "grade", "class",
+        "represent", "voice", "support", "together"
+    ],
+
     "interest": [
         "interest", "passion", "curious", "motivated",
-        "excited", "why", "join", "drawn"
+        "excited", "drawn"
     ],
     "skills": [
         "skills", "experience", "proficient",
@@ -51,9 +60,7 @@ PROMPT_KEYWORDS = {
     "growth": [
         "challenge", "learned", "mistake", "improved"
     ],
-    "community": [
-        "community", "team", "others", "collaborate"
-    ],
+   
     "identity": [
         "background", "culture", "belief", "identity"
     ]
@@ -208,16 +215,20 @@ What this prompt is testing: {', '.join(categories)}"""
 
 def generate_outline(category, top_experience, prompt, extra_context=""):
     system_prompt = """You are an application coach for high school students applying to competitive clubs or programs.
-Give EXACTLY 4 steps numbered 1-4. Each step must be DISTINCT — no repeating the same idea in different words.Do NOT guess their experiences.
-Follow this exact structure:
-1. How to open — introduce the specific experience
-2. What they did or learned from that experience
-3. How it connects to the opportunity they're applying to
-4. What they hope to contribute or gain going forward
 
-If the student provided extra context with a personal story or specific detail, reference it directly in the steps where needed — do not be vague about it.
-Each step is ONE sentence under 15 words.
+A strong application response must:
+- Reveal something genuine about who the student is as a person
+- Avoid generic statements that any student could write
+- Highlight a spike — one thing they are deeply invested in or uniquely experienced in
+- Connect to their broader ambitions or goals
+- Feel like it has a consistent theme or narrative thread
+
+Your job is to give 4 specific things this student should make sure to include in their response.
+These are NOT structural steps — they are specific content suggestions tailored to their experience and prompt.
+Each point tells them WHAT to actually say, not how to format their answer.
+Each point is ONE sentence under 20 words.
 Do NOT start with any intro phrase. Start directly with '1.'
+Do NOT give generic advice like 'be specific' or 'show passion'.
 No bold text. Talk directly to the student using 'you'."""
 
     user_message = f"""Prompt the student is answering: "{prompt}"
@@ -227,7 +238,7 @@ What the prompt is testing: {category}"""
     if extra_context:
         user_message += f"\nExtra context from the student: {extra_context}"
 
-    user_message += "\n\nGive them 4 specific steps for what to actually write."
+    user_message += "\n\nWhat 4 specific things should this student make sure to include in their response?"
 
     try:
         response = client.chat.completions.create(
@@ -236,7 +247,7 @@ What the prompt is testing: {category}"""
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": user_message}
             ],
-            max_tokens=300
+            max_tokens=350
         )
         text = response.choices[0].message.content.strip()
         lines = [line.strip() for line in text.split("\n") if line.strip()]
@@ -245,10 +256,10 @@ What the prompt is testing: {category}"""
     except Exception as e:
         print("GROQ ERROR generate_outline:", e)
         return [
-            f"1. Open by introducing your experience with {top_experience}.",
-            "2. Explain what you did and what you learned.",
-            "3. Describe the outcome or result.",
-            "4. Connect it back to why you want to join."
+            f"1. Mention a specific moment from {top_experience} that reveals who you are.",
+            "2. Show your spike — the one thing you are more invested in than anything else.",
+            "3. Connect your experience to your broader goals and ambitions.",
+            "4. End with something only you could write — your unique angle."
         ]
 
 
