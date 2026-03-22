@@ -144,7 +144,7 @@ def match_experiences(experiences, categories):
 # =====================
 
 def explain_prompt(prompt, categories, extra_context=""):
-    system_prompt = """You are an application coach for high school students. They are applying to competitive clubs and programs, not schools or universities.
+    system_prompt = """You are an application coach for high school students. They are applying to competitive clubs and programs, not schools or universities. Do not use first person.
 Analyze the given application prompt and return exactly this format with no extra text:
 
 Meaning: [one sentence — what the reviewer is really looking for]
