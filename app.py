@@ -316,7 +316,7 @@ def index():
             },
             "questions": {
                 cat: reflection_questions(cat)
-                for cat in categories
+                for cat in categories[:1]
             },
         }
 
