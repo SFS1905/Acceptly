@@ -2,6 +2,8 @@ from flask import Flask, render_template, request
 import re
 from difflib import get_close_matches
 from groq import Groq
+from dotenv import load_dotenv
+import os
 
 app = Flask(__name__)
 
