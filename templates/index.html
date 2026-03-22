@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Acceptly</title>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <a href="#" class="nav-logo" onclick="showTab('home', document.querySelector('.nav-link:first-child')); return false;">Acceptly</a>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" onclick="showTab('home', this); return false;">Home</a>
+                <a href="#" class="nav-link" onclick="showTab('analyzer', this); return false;">Try It</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HOME TAB -->
+    <div id="tab-home" class="tab-content active">
+
+        <!-- HERO -->
+        <div class="hero">
+            <div class="hero-inner">
+                <p class="hero-label"> For high school students applying to competitive clubs or programs</p>
+                <h1 class="hero-title">Write applications<br>that get <em>accepted.</em></h1>
+                <p class="hero-sub">Paste your prompt, add your experiences, and get a personalized outline built around your background.</p>
+                <button class="btn-primary" onclick="showTab('analyzer', document.querySelector('.nav-link:last-child')); return false;">Get Started →</button>
+            </div>
+        </div>
+
+        <!-- HOW IT WORKS -->
+        <div class="how-section">
+            <div class="how-inner">
+                <p class="section-label">How it works</p>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <span class="step-num">01</span>
+                        <h3>Paste your prompt</h3>
+                        <p>Drop in the application question exactly as written. Acceptly reads what the reviewer is actually looking for.</p>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-num">02</span>
+                        <h3>Add your experiences</h3>
+                        <p>List what you have done — clubs, internships, projects, volunteering. Acceptly ranks which ones are most relevant.</p>
+                    </div>
+                    <div class="step-card">
+                        <span class="step-num">03</span>
+                        <h3>Get your outline</h3>
+                        <p>Receive a personalized step-by-step outline based on your specific experiences.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!-- ABOUT -->
+        <div class="about-section">
+            <div class="about-inner">
+                <p class="section-label">About</p>
+                <div class="about-grid">
+                    <h2 class="about-title">Why Acceptly<br>Was Built</h2>
+                    <p class="about-body">Getting into competitive clubs and programs can feel impossible sometimes. The process often shuts out students who are just as passionate and capable but don't know how to translate that interest on paper. Acceptly was built to change that by giving every student the same guidance to succeed and be involved.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ANALYZER TAB -->
+    <div id="tab-analyzer" class="tab-content">
+        <div class="analyzer-wrap">
+
+            <div class="analyzer-header">
+                <h2>Application Analyzer</h2>
+                <p>Fill in your prompt and experiences to get personalized guidance.</p>
+            </div>
+
+            <form method="POST" action="/analyze">
+                <div class="form-group">
+                    <label for="prompt">Application Prompt</label>
+                    <textarea id="prompt" name="prompt" rows="4" placeholder="Paste the application question here...">{{ request.form.get('prompt', '') }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="experiences">Your Experiences <span class="label-hint">(comma-separated)</span></label>
+                    <textarea id="experiences" name="experiences" rows="3" placeholder="e.g. competed in DECA, hospital volunteer, built a coding project...">{{ request.form.get('experiences', '') }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="context">What makes your interest genuine? <span class="label-hint">(optional but recommended)</span></label>
+                    <textarea id="context" name="context" rows="3" placeholder="What's a specific moment, story, or detail only you could write about that relates to your interest and desires? The more specific, the better your outline.">{{ request.form.get('context', '') }}</textarea>
+                </div>
+
+                <button type="submit" class="btn-primary">Analyze →</button>
+            </form>
+
+            {% if results %}
+            <div class="results">
+
+                <div class="result-section">
+                    <h3>What This Prompt Is Asking</h3>
+                    {% if results.prompt_explanation %}
+                        {% if results.prompt_explanation is mapping %}
+                            <div class="result-block">
+                                <span class="result-tag">Meaning</span>
+                                <p>{{ results.prompt_explanation.Meaning }}</p>
+                            </div>
+                            <div class="result-block">
+                                <span class="result-tag">Common Mistake</span>
+                                <p>{{ results.prompt_explanation.Mistake }}</p>
+                            </div>
+                            <div class="result-block">
+                                <span class="result-tag">Strategy</span>
+                                {% for line in results.prompt_explanation.Strategy.split('\n') %}
+                                    {% if line.strip() %}<p>{{ line }}</p>{% endif %}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {% for exp in results.prompt_explanation %}
+                                <div class="result-block">
+                                    <span class="result-tag">Meaning</span>
+                                    <p>{{ exp.Meaning }}</p>
+                                </div>
+                                <div class="result-block">
+                                    <span class="result-tag">Common Mistake</span>
+                                    <p>{{ exp.Mistake }}</p>
+                                </div>
+                                <div class="result-block">
+                                    <span class="result-tag">Strategy</span>
+                                    <p>{{ exp.Strategy }}</p>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <div class="result-section">
+                    <h3>Relevant Experiences</h3>
+                    <ul class="exp-list">
+                        {% for exp in results.experiences %}
+                            <li>{{ exp }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                {% for cat in results.categories %}
+                <div class="result-section">
+                    <h3>{{ cat | capitalize }} Outline</h3>
+
+                    <ol class="outline-list">
+                        {% for item in results.outlines[cat] %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ol>
+                    <p class="nudge">Before you write, what's the one detail only you could include here?</p>
+
+                    <h4>Reflection Questions</h4>
+                    <ul class="q-list">
+                        {% for q in results.questions[cat] %}
+                            <li>{{ q }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endfor %}
+
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+<script>
+    function showTab(name, el) {
+        document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        document.getElementById('tab-' + name).classList.add('active');
+        if (el) el.classList.add('active');
+    }
+
+    {% if results %}
+        showTab('analyzer', document.querySelector('.nav-link:last-child'));
+    {% endif %}
+</script>
+
+</body>
+</html>
