@@ -215,7 +215,7 @@ What this prompt is testing: {', '.join(categories)}"""
 
 def generate_outline(category, top_experience, prompt, extra_context=""):
     system_prompt = """You are an application coach for high school students applying to competitive clubs or programs.
-
+ 
 A strong application response must:
 - Reveal something genuine about who the student is as a person
 - Avoid generic statements that any student could write
@@ -223,7 +223,7 @@ A strong application response must:
 - Connect to their broader ambitions or goals
 - Feel like it has a consistent theme or narrative thread
 
-Your job is to give 4 specific things this student should make sure to include in their response.
+Your job is to give 4 specific things this student should make sure to include in their response. Do NOT invent or assume specific details, moments, or stories the student did not provide. Only reference what the student actually told you.
 These are NOT structural steps — they are specific content suggestions tailored to their experience and prompt.
 Each point tells them WHAT to actually say, not how to format their answer.
 Each point is ONE sentence under 20 words.
@@ -312,7 +312,7 @@ def index():
             "prompt_explanation": prompt_explanation,
             "outlines": {
                 cat: generate_outline(cat, top_experience, prompt, extra_context)
-                for cat in categories
+                for cat in categories[:1]
             },
             "questions": {
                 cat: reflection_questions(cat)
