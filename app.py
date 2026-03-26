@@ -316,12 +316,13 @@ def index():
             },
             "questions": {
                 cat: reflection_questions(cat)
-                for cat in categories[:1]
+                for cat in categories
             },
         }
 
     return render_template("index.html", results=results)
 
+
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 7860))
+    port = int(os.environ.get("PORT", 5000))
     app.run(host="0.0.0.0", port=port)
