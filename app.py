@@ -111,17 +111,32 @@ EXPERIENCE_KEYWORDS = {
 # =====================
 
 def classify_prompt(prompt):
-    words = normalize(prompt)
-    scores = {cat: 0 for cat in PROMPT_KEYWORDS}
-
-    for word in words:
-        for cat, kws in PROMPT_KEYWORDS.items():
-            if word in kws:
-                scores[cat] += 1
-            elif fuzzy_match(word, kws):
-                scores[cat] += 0.5
-
-    return [cat for cat, score in scores.items() if score > 0]
+    try:
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            messages=[
+                {
+                    "role": "system",
+                    "content": """You are classifying a high school application prompt.
+                    Return ONLY a single word from this list that best describes what the prompt is testing:
+                    interest, leadership, skills, impact, growth, community, identity
+                    Return only one word, nothing else."""
+                },
+                {
+                    "role": "user",
+                    "content": f'Application prompt: "{prompt}"'
+                }
+            ],
+            max_tokens=10
+        )
+        category = response.choices[0].message.content.strip().lower()
+        valid = ["interest", "leadership", "skills", "impact", "growth", "community", "identity"]
+        if category in valid:
+            return [category]
+        return ["interest"]  # default fallback
+    except Exception as e:
+        print("GROQ ERROR classify_prompt:", e)
+        return ["interest"]
 
 
 def relevance_score(exp, categories):
@@ -215,31 +230,18 @@ What this prompt is testing: {', '.join(categories)}"""
 
 def generate_outline(category, top_experience, prompt, extra_context=""):
     system_prompt = """You are an application coach for high school students applying to competitive clubs or programs.
- 
-A strong application response must:
-- Reveal something genuine about who the student is as a person or highlight a spike — one thing they are deeply invested in or uniquely experienced in
-- Avoid generic statements that any student could write
-- Connect to their broader ambitions or goals
-- Feel like it has a consistent theme or narrative thread
 
-Give EXACTLY 4 steps numbered 1-4 to help students achieve this strong application. Each step must be DISTINCT.
-Follow this EXACT structure:
-1. How to open — introduce their experience with a specific/genuine detail
-2. What they did or learned — something only they could say, their spike
-3. How it connects to this specific opportunity
-4. What makes them different — their unique angle or perspective
+A strong application response reveals who the student is, avoids generic statements, highlights their spike, and connects to their goals.
 
+Give EXACTLY 4 numbered steps. Each step is ONE sentence under 20 words.
+- Step 1: how to open using their specific experience
+- Step 2: what specific thing they did or learned that only they could say
+- Step 3: how their experience connects to this specific opportunity
+- Step 4: what unique angle or perspective they bring that no one else has
 
-Rules:
-- Each step is ONE sentence under 20 words
-- Make each step specific to their actual experience and prompt
-- Do NOT invent details they didn't provide
-- Do NOT give generic advice like 'be specific' or 'show passion'
-- Do NOT start with any intro phrase, start directly with '1.'
-- No bold text
-- Talk directly to the student using 'you'
-
-"""
+Do NOT copy these instructions as your answer. Generate real advice based on the student's actual prompt and experience.
+Do NOT start with any intro phrase. Start directly with '1.'
+No bold text. Talk directly to the student using 'you'."""
 
     user_message = f"""Prompt the student is answering: "{prompt}"
 Their most relevant experience: {top_experience}
