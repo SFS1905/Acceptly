@@ -215,7 +215,7 @@ nav {
 
 .step-card p {
     font-size: 0.88rem;
-    color: var(--gray-600);
+    color: var(--white);
     line-height: 1.7;
     font-weight: 300;
 }
