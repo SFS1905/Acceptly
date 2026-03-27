@@ -41,7 +41,7 @@ PROMPT_KEYWORDS = {
 
     "interest": [
         "interest", "passion", "curious", "motivated",
-        "excited", "drawn"
+        "excited", "drawn", "join", "interested"
     ],
     "skills": [
         "skills", "experience", "proficient",
@@ -156,7 +156,7 @@ Analyze the given application prompt and return exactly this format with no extr
 
 Meaning: [one sentence — what the reviewer is really looking for]
 Mistake: [one sentence — the most common mistake students make on this type of prompt]
-Strategy: [exactly 3 short numbered tips, each under 20 words, specific to this prompt]
+Strategy: [exactly 2-3 short numbered tips, each under 20 words, specific to this prompt]
 
 Be specific to the actual prompt. Talk directly to the student using 'you'. No fluff."""
 
@@ -217,19 +217,29 @@ def generate_outline(category, top_experience, prompt, extra_context=""):
     system_prompt = """You are an application coach for high school students applying to competitive clubs or programs.
  
 A strong application response must:
-- Reveal something genuine about who the student is as a person
+- Reveal something genuine about who the student is as a person or highlight a spike — one thing they are deeply invested in or uniquely experienced in
 - Avoid generic statements that any student could write
-- Highlight a spike — one thing they are deeply invested in or uniquely experienced in
 - Connect to their broader ambitions or goals
 - Feel like it has a consistent theme or narrative thread
 
-Your job is to give 4 specific things this student should make sure to include in their response. Do NOT invent or assume specific details, moments, or stories the student did not provide. Only reference what the student actually told you.
-These are NOT structural steps — they are specific content suggestions tailored to their experience and prompt.
-Each point tells them WHAT to actually say, not how to format their answer.
-Each point is ONE sentence under 20 words.
-Do NOT start with any intro phrase. Start directly with '1.'
-Do NOT give generic advice like 'be specific' or 'show passion'.
-No bold text. Talk directly to the student using 'you'."""
+Give EXACTLY 4 steps numbered 1-4 to help students achieve this strong application. Each step must be DISTINCT.
+Follow this EXACT structure:
+1. How to open — introduce their experience with a specific/genuine detail
+2. What they did or learned — something only they could say, their spike
+3. How it connects to this specific opportunity
+4. What makes them different — their unique angle or perspective
+
+
+Rules:
+- Each step is ONE sentence under 20 words
+- Make each step specific to their actual experience and prompt
+- Do NOT invent details they didn't provide
+- Do NOT give generic advice like 'be specific' or 'show passion'
+- Do NOT start with any intro phrase, start directly with '1.'
+- No bold text
+- Talk directly to the student using 'you'
+
+"""
 
     user_message = f"""Prompt the student is answering: "{prompt}"
 Their most relevant experience: {top_experience}
