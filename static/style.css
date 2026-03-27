@@ -46,7 +46,7 @@ nav {
     padding: 0 2.5rem;
     position: sticky;
     top: 0;
-    background: rgba(245, 244, 240, 0.97);
+    background: var(--white);
     backdrop-filter: blur(10px);
     z-index: 100;
 }
