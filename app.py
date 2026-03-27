@@ -301,7 +301,6 @@ def index():
         extra_context = request.form.get("context", "").strip()
 
         categories = classify_prompt(prompt)
-        print("CATEGORIES DETECTED:", categories)
         matched = match_experiences(experiences, categories)
         top_experience = matched[0] if matched else "your experience"
 
@@ -320,7 +319,6 @@ def index():
                 for cat in categories
             },
         }
-
     return render_template("index.html", results=results)
 
 

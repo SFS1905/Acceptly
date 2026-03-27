@@ -165,6 +165,8 @@
                     <h3>{{ cat | capitalize }} Outline</h3>
 
                     <ol class="outline-list">
+                        <p>DEBUG: categories = {{ results.categories }}</p>
+                        <p>DEBUG: outlines keys = {{ results.outlines.keys() | list }}</p>
                         {% for item in results.outlines[cat] %}
                             <li>{{ item }}</li>
                         {% endfor %}
