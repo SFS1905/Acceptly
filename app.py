@@ -327,11 +327,6 @@ def index():
 
         prompt_explanation = explain_prompt(prompt, categories[:1], extra_context, org_info)
 
-        "outlines": {
-            cat: generate_outline(cat, top_experience, prompt, extra_context, org_info)
-            for cat in categories[:1]
-        },
-
         results = {
             "categories": categories,
             "experiences": matched,
