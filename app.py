@@ -229,7 +229,7 @@ What this prompt is testing: {', '.join(categories)}"""
             "Meaning": "The reviewer wants to understand what makes you a strong candidate.",
             "Mistake": "Being too generic — write something only you could write.",
             "Strategy": "1. Be specific\n2. Use your real experiences\n3. Connect to the role"
-
+        }
 
 
 def generate_outline(category, top_experience, prompt, extra_context="", org_info=""):
@@ -254,6 +254,9 @@ What the prompt is testing: {category}"""
     if extra_context:
         user_message += f"\nExtra context from the student: {extra_context}"
 
+    if org_info:
+        user_message += f"\nAbout the organization they are applying to: {org_info}"
+
     user_message += "\n\nWhat 4 specific things should this student make sure to include in their response?"
 
     try:
@@ -277,8 +280,6 @@ What the prompt is testing: {category}"""
             "3. Connect your experience to your broader goals and ambitions.",
             "4. End with something only you could write — your unique angle."
 
-    if org_info:
-        user_message += f"\nAbout the organization they are applying to: {org_info}"
         ]
 
 
@@ -336,7 +337,7 @@ def index():
             "experiences": matched,
             "prompt_explanation": prompt_explanation,
             "outlines": {
-                cat: generate_outline(cat, top_experience, prompt, extra_context)
+                cat: generate_outline(cat, top_experience, prompt, extra_context, org_info)
                 for cat in categories[:1]
             },
             "questions": {
