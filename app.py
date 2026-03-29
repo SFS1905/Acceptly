@@ -310,8 +310,7 @@ def reflection_questions(category):
 # FLASK ROUTE
 # =====================
 
-@app.route("/", methods=["GET"])
-@app.route("/analyze", methods=["POST"])
+@app.route("/", methods=["GET", "POST"])
 def index():
     results = None
 

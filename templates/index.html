@@ -92,7 +92,7 @@
                 <p>Fill in your prompt and experiences to get personalized guidance.</p>
             </div>
 
-            <form method="POST" action="/analyze">
+            <form method="POST" action="/">
                 <div class="form-group">
                     <label for="prompt">Application Prompt</label>
                     <textarea id="prompt" name="prompt" rows="4" placeholder="Paste the application question here...">{{ request.form.get('prompt', '') }}</textarea>
