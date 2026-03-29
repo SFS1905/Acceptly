@@ -244,7 +244,7 @@ Give EXACTLY 4 numbered steps. Each step is ONE sentence under 20 words.
 - Step 4: what unique angle or perspective they bring that no one else has
 
 Do NOT copy these instructions as your answer. Generate real advice based on the student's actual prompt and experience. Do NOT use "you could" — be direct and instructional instead.
-Do NOT write example sentences or put words in the student's mouth — tell them WHAT to include, not HOW to word it.
+Do NOT write example sentences or put words in the student's mouth — tell them WHAT to include, not HOW to word it. Each of the 4 steps must cover a completely different aspect — no overlapping ideas between steps.
 Do NOT start with any intro phrase. Start directly with '1.'
 No bold text. Talk directly to the student using 'you'."""
 
