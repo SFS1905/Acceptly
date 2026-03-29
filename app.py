@@ -181,6 +181,10 @@ What this prompt is testing: {', '.join(categories)}"""
     if extra_context:
         user_message += f"\nExtra context from the student: {extra_context}"
 
+    if org_info:
+        user_message += f"\nAbout the organization they are applying to: {org_info}"
+        
+
     try:
         response = client.chat.completions.create(
             model="llama-3.1-8b-instant",
@@ -226,9 +230,6 @@ What this prompt is testing: {', '.join(categories)}"""
             "Mistake": "Being too generic — write something only you could write.",
             "Strategy": "1. Be specific\n2. Use your real experiences\n3. Connect to the role"
 
-    if org_info:
-        user_message += f"\nAbout the organization they are applying to: {org_info}"
-        }
 
 
 def generate_outline(category, top_experience, prompt, extra_context="", org_info=""):
