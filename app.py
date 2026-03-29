@@ -165,7 +165,7 @@ def match_experiences(experiences, categories):
 # AI FUNCTIONS
 # =====================
 
-def explain_prompt(prompt, categories, extra_context=""):
+def explain_prompt(prompt, categories, extra_context="", org_info=""):
     system_prompt = """You are an application coach for high school students. They are applying to competitive clubs and programs, not schools or universities. Do not use first person.
 Analyze the given application prompt and return exactly this format with no extra text:
 
@@ -225,10 +225,13 @@ What this prompt is testing: {', '.join(categories)}"""
             "Meaning": "The reviewer wants to understand what makes you a strong candidate.",
             "Mistake": "Being too generic — write something only you could write.",
             "Strategy": "1. Be specific\n2. Use your real experiences\n3. Connect to the role"
+
+    if org_info:
+        user_message += f"\nAbout the organization they are applying to: {org_info}"
         }
 
 
-def generate_outline(category, top_experience, prompt, extra_context=""):
+def generate_outline(category, top_experience, prompt, extra_context="", org_info=""):
     system_prompt = """You are an application coach for high school students applying to competitive clubs or programs.
 
 A strong application response reveals who the student is, avoids generic statements, highlights their spike, and connects to their goals.
@@ -272,6 +275,9 @@ What the prompt is testing: {category}"""
             "2. Show your spike — the one thing you are more invested in than anything else.",
             "3. Connect your experience to your broader goals and ambitions.",
             "4. End with something only you could write — your unique angle."
+
+    if org_info:
+        user_message += f"\nAbout the organization they are applying to: {org_info}"
         ]
 
 
@@ -311,12 +317,18 @@ def index():
         raw = request.form.get("experiences", "")
         experiences = [e.strip() for e in raw.split(",") if e.strip()]
         extra_context = request.form.get("context", "").strip()
+        org_info = request.form.get("org_info", "").strip()
 
         categories = classify_prompt(prompt)
         matched = match_experiences(experiences, categories)
         top_experience = matched[0] if matched else "your experience"
 
-        prompt_explanation = explain_prompt(prompt, categories[:1], extra_context)
+        prompt_explanation = explain_prompt(prompt, categories[:1], extra_context, org_info)
+
+        "outlines": {
+            cat: generate_outline(cat, top_experience, prompt, extra_context, org_info)
+            for cat in categories[:1]
+        },
 
         results = {
             "categories": categories,

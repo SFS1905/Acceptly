@@ -104,9 +104,15 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="context">What makes your interest genuine? <span class="label-hint">(optional but recommended)</span></label>
+                    <label for="context">What Makes Your Interest Genuine? <span class="label-hint">(optional but recommended)</span></label>
                     <textarea id="context" name="context" rows="3" placeholder="What's a specific moment, story, or detail only you could write about that relates to your interest and desires? The more specific, the better your outline.">{{ request.form.get('context', '') }}</textarea>
                 </div>
+
+                <div class="form-group">
+                    <label for="org_info">Information About the Club, Organization, Program, etc... You Are Applying to</label>
+                    <textarea id="org_info" name="org_info" rows="3" placeholder="Paste a short description of the club, org, or, program you are applying to. e.g. what it's about, what their mission is...">{{ request.form.get ('org_info', '') }}</textarea>
+                </div>
+                
 
                 <button type="submit" class="btn-primary">Analyze →</button>
             </form>
